@@ -13,7 +13,7 @@ import java.util.Map;
 public class MainServer {
 
     /* Some constants */
-    public static final int BASE_PORT = 2000;  // do not change
+    public static final int BASE_PORT = 20000;  // do not change
 
 
     /* local data for the server
