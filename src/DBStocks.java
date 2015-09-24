@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class DBStocks {
-    private Map<String, Tuple> stockList;
+    private static Map<String, Tuple> stockList;
     private String [] fields;
 
     public DBStocks(String cvsFile, String key, String value1,String value2) {
@@ -73,9 +73,18 @@ public class DBStocks {
         Tuple<String,Integer> arr = stockList.get(key);
         return arr.x;
     }
+    public boolean isin(String key){
+        return stockList.containsKey(key);
+    }
 
     public int findPrice(String key) {
         Tuple<String,Integer> arr = stockList.get(key);
         return arr.y;
+    }
+
+    public void updatePrice(String key,String line) {
+        Tuple<String,Integer> arr = stockList.get(key);
+        arr.y = Integer.parseInt(line);
+        stockList.replace(key,arr);
     }
 }
