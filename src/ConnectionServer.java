@@ -10,7 +10,8 @@ public class ConnectionServer implements Runnable {
 
     public static final String GET_NAME_MSG = "Your Name :";
     public static final String GET_STOCK_MSG = "Stock You are willing to Bid :";
-    public static final String AUTH_DONE_MSG = "You are authorised to bid\n";
+    public static final String AUTH_DONE_MSG = "Stocks current price is\n";
+    public static final String PLZ_BID    = "Place your bid:";
     public static final String MSG_POSTED    = "Your bid is success\n";
 
     // per connection variables
@@ -44,9 +45,14 @@ public class ConnectionServer implements Runnable {
 
                 switch(currentState) {
                     case -1:
-                        clientName = line;
-                        currentState = WAIT_AUTH;
-                        outline = GET_STOCK_MSG;
+                        if (line.isEmpty()) {
+                            outline = GET_NAME_MSG;
+                        } else {
+                            clientName = line;
+                            currentState = WAIT_AUTH;
+                            outline = GET_STOCK_MSG;
+                        }
+
                         break;
 
                     case WAIT_AUTH:
@@ -55,8 +61,9 @@ public class ConnectionServer implements Runnable {
 
                         if(mainServer.isAuthorized(line)) {
                             stockSymbol = line;
+                            double stockPrice = mainServer.getPrice(line);
                             currentState = AUTH_DONE;
-                            outline = AUTH_DONE_MSG;
+                            outline = String.format("%s%f\n%s", AUTH_DONE_MSG, stockPrice, PLZ_BID);
                         }
                         else {
                             outline = GET_STOCK_MSG;
@@ -64,12 +71,15 @@ public class ConnectionServer implements Runnable {
                         break;
                     /*****************************/
                     case AUTH_DONE:
-                        mainServer.changePrice(stockSymbol,line);
-                        mainServer.addHistory(stockSymbol,clientName,line);
-                        outline = MSG_POSTED;
+                        int k = mainServer.changePrice(stockSymbol, line);
+                        if(k==0){
+                            mainServer.addHistory(stockSymbol,clientName,line);
+                            outline = String.format("%s\n%s", MSG_POSTED, PLZ_BID);
+                        }
+                        else outline = "wrong Entry. Try again\n";
                         break;
                     default:
-                        System.out.println("Undefined state");
+                        System.out.println("Undefined state\n");
                         return;
                 } // case
 

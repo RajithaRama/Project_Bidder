@@ -13,7 +13,7 @@ import java.util.Map;
 public class MainServer {
 
     /* Some constants */
-    public static final int BASE_PORT = 20000;  // do not change
+    public static final int BASE_PORT = 2000;  // do not change
 
 
     /* local data for the server
@@ -31,14 +31,14 @@ public class MainServer {
 
     public MainServer(int socket, DBStocks stocks) {
         this.stocks = stocks;
-        history.put("FB", new LinkedList<Tuple<String, Integer>>());
-        history.put("VRTU", new LinkedList<Tuple<String, Integer>>());
-        history.put("MSFT", new LinkedList<Tuple<String, Integer>>());
-        history.put("GOOGL", new LinkedList<Tuple<String, Integer>>());
-        history.put("YHOO", new LinkedList<Tuple<String, Integer>>());
-        history.put("XLNX", new LinkedList<Tuple<String, Integer>>());
-        history.put("TSLA", new LinkedList<Tuple<String, Integer>>());
-        history.put("TXN", new LinkedList<Tuple<String, Integer>>());
+        history.put("FB", new LinkedList<Tuple<String, Double>>());
+        history.put("VRTU", new LinkedList<Tuple<String, Double>>());
+        history.put("MSFT", new LinkedList<Tuple<String, Double>>());
+        history.put("GOOGL", new LinkedList<Tuple<String, Double>>());
+        history.put("YHOO", new LinkedList<Tuple<String, Double>>());
+        history.put("XLNX", new LinkedList<Tuple<String, Double>>());
+        history.put("TSLA", new LinkedList<Tuple<String, Double>>());
+        history.put("TXN", new LinkedList<Tuple<String, Double>>());
 
         try {
             this.serverSocket = new ServerSocket(socket);
@@ -65,11 +65,17 @@ public class MainServer {
         }
 
 
-    public void changePrice(String stock, String line) {
-        this.stocks.updatePrice(stock, line);
+    public int changePrice(String stock, String line) {
+        return this.stocks.updatePrice(stock, line);
     }
 
     public void addHistory(String stockSymbol, String clientName, String line) {
-        history.get(stockSymbol).add(new Tuple<String,Integer>(clientName,Integer.parseInt(line)));
+        LinkedList<Tuple<String, Double>> arr=  history.get(stockSymbol);
+        arr.add(new Tuple<String, Double>(clientName, Double.parseDouble(line)));
+        history.replace(stockSymbol,arr);
+    }
+
+    public double getPrice(String stockSymbol){
+        return stocks.findPrice(stockSymbol);
     }
 }

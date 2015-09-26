@@ -29,13 +29,13 @@ public class Display extends JFrame implements ActionListener{
     private JLabel TXN;
     private JLabel title;
     private MigLayout form;
+    private MainServer mainServer;
 
 
-
-    public Display(){
+    public Display(MainServer mainServer){
 
         super("Stock Price");
-
+        this.mainServer = mainServer;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         init();
 
@@ -151,6 +151,13 @@ public class Display extends JFrame implements ActionListener{
 
 
     public void actionPerformed(ActionEvent e){
-
+        FB.setText(String.valueOf(mainServer.getPrice("FB")));
+        MSFT.setText(String.valueOf(mainServer.getPrice("MSFT")));
+        VRTU.setText(String.valueOf(mainServer.getPrice("VRTU")));
+        GOOGL.setText(String.valueOf(mainServer.getPrice("GOOGL")));
+        YHOO.setText(String.valueOf(mainServer.getPrice("YHOO")));
+        XLNX.setText(String.valueOf(mainServer.getPrice("XLNX")));
+        TSLA.setText(String.valueOf(mainServer.getPrice("TSLA")));
+        TXN.setText(String.valueOf(mainServer.getPrice("TXN")));
     }
 }

@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class DBStocks {
-    private static Map<String, Tuple> stockList;
+    private static Map<String, Tuple<String, Double>> stockList;
     private String [] fields;
 
     public DBStocks(String cvsFile, String key, String value1,String value2) {
@@ -35,19 +35,23 @@ public class DBStocks {
             // note how you can throw a new exception
 
             // get a new hash map
-            stockList = new HashMap<String, Tuple>();
+            stockList = new HashMap<String, Tuple<String,Double>>();
 
 	    /* read each line, getting it split by ,
 	     * use the indexes to get the key and value
 	     */
             String [] tokens;
-            Tuple<String, Integer> tokens2;
+            Tuple<String, Double> tokens2;
             for(String line = reader.readLine();
                 line != null;
                 line = reader.readLine()) {
                 tokens = line.split(",");
-                tokens2 = new Tuple(tokens[val1Index],tokens[val2Index]);
-                stockList.put(tokens[keyIndex], tokens2);
+                try {
+                    tokens2 = new Tuple<String, Double>(tokens[val1Index], Double.parseDouble(tokens[val2Index]));
+                }catch(java.lang.NumberFormatException e){
+                    tokens2 = new Tuple<String, Double>(tokens[val1Index], 0.00);
+                }
+                    stockList.put(tokens[keyIndex], tokens2);
             }
 
             if(fileRd != null) fileRd.close();
@@ -70,21 +74,27 @@ public class DBStocks {
     }
 
     public String findName(String key) {
-        Tuple<String,Integer> arr = stockList.get(key);
+        Tuple<String,Double> arr = stockList.get(key);
         return arr.x;
     }
     public boolean isin(String key){
         return stockList.containsKey(key);
     }
 
-    public int findPrice(String key) {
-        Tuple<String,Integer> arr = stockList.get(key);
+    public double findPrice(String key) {
+        Tuple<String, Double> arr = stockList.get(key);
         return arr.y;
     }
 
-    public void updatePrice(String key,String line) {
-        Tuple<String,Integer> arr = stockList.get(key);
-        arr.y = Integer.parseInt(line);
-        stockList.replace(key,arr);
+    public int updatePrice(String key, String line) {
+        try {
+            Tuple<String, Double> arr = stockList.get(key);
+            arr.y = Double.parseDouble(line);
+            stockList.replace(key, arr);
+        }catch (java.lang.NumberFormatException e){
+            return -1;
+        }
+        return 0;
+
     }
 }
