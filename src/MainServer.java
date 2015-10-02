@@ -25,7 +25,7 @@ public class MainServer {
 
 
 
-
+    //hashmap to store linkedlists of history
     public static Map<String,LinkedList> history = new HashMap<String,LinkedList>();
 
 
@@ -40,7 +40,7 @@ public class MainServer {
         history.put("TSLA", new LinkedList<Tuple<String, Double>>());
         history.put("TXN", new LinkedList<Tuple<String, Double>>());
 
-        addHistory("FB", "Rama", "200");
+        //addHistory("FB", "Rama", "200");
         try {
             this.serverSocket = new ServerSocket(socket);
         } catch (IOException e) {
