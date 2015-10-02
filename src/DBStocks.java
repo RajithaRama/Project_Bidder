@@ -2,7 +2,6 @@
  * Created by Rama on 9/23/2015.
  */
 
-import oracle.jrockit.jfr.StringConstantPool;
 
 import java.io.*;
 import java.util.*;
@@ -86,7 +85,7 @@ public class DBStocks {
         return arr.y;
     }
 
-    public int updatePrice(String key, String line) {
+    public synchronized int updatePrice(String key, String line) {
         try {
             Tuple<String, Double> arr = stockList.get(key);
             arr.y = Double.parseDouble(line);

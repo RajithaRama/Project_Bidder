@@ -1,9 +1,11 @@
+import com.sun.javafx.collections.MappingChange;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 /**
  * Created by Rama on 9/23/2015.
@@ -28,9 +30,11 @@ public class Display extends JFrame implements ActionListener{
     private JLabel TSLA;
     private JLabel TXN;
     private JLabel title;
+    private JComboBox<String> histo;
     private MigLayout form;
     private MainServer mainServer;
-
+    private JTextArea textArea;
+    private HashMap<String, Integer> place = new HashMap<String, Integer>();
 
     public Display(MainServer mainServer){
 
@@ -41,8 +45,6 @@ public class Display extends JFrame implements ActionListener{
 
         Timer timer = new Timer(500, this);
         timer.start();
-
-
 
     }
 
@@ -63,81 +65,116 @@ public class Display extends JFrame implements ActionListener{
         XLNX = new JLabel();
         TSLA = new JLabel();
         TXN = new JLabel();
+        histo = new JComboBox();
         title = new JLabel("Current Stock prices");
+        textArea = new JTextArea("History....\n");
         form = new MigLayout();
+        Dimension label = new Dimension(100,50);
+
+        place.put("FB",0);
+        place.put("MSFT", 0);
+        place.put("VRTU", 0);
+        place.put("GOOGL", 0);
+        place.put("YHOO", 0);
+        place.put("XLNX", 0);
+        place.put("TSLA", 0);
+        place.put("TXN", 0);
 
         disp = new JPanel(form);
 
-        disp.setSize(400, 600);
+        disp.setPreferredSize(new Dimension(600, 500));
         disp.setFont(new Font("Calibri", Font.ITALIC, 24));
 
         title.setFont(new Font("Calibri", Font.BOLD, 30));
         title.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(title, "span 2, grow, shrink, wrap");
 
-        stockFB.setSize(100, 50);
+        stockFB.setPreferredSize(label);
         stockFB.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockFB, "grow, shrink");
 
-        FB.setSize(100, 50);
+        FB.setPreferredSize(label);
         FB.setHorizontalAlignment(SwingConstants.CENTER);
-        disp.add(FB, "grow, shrink, wrap");
+        disp.add(FB, "grow, shrink");
 
-        stockGOOGL.setSize(100, 50);
+        //histo.addItem("None");
+        histo.addItem("FB");
+        histo.addItem("VRTU");
+        histo.addItem("GOOGL");
+        histo.addItem("MSFT");
+        histo.addItem("YHOO");
+        histo.addItem("XLNX");
+        histo.addItem("TSLA");
+        histo.addItem("TXN");
+        histo.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.setText(histo.getSelectedItem() + " Bidding History\n");
+                textArea.append(mainServer.getHistory((String) histo.getSelectedItem(), 0));
+            }
+        });
+        disp.add(histo, "grow, shrink, span 2, wrap");
+
+
+        stockGOOGL.setPreferredSize(label);
         stockGOOGL.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockGOOGL, "grow, shrink");
 
-        GOOGL.setSize(100, 50);
+        GOOGL.setPreferredSize(label);
         GOOGL.setHorizontalAlignment(SwingConstants.CENTER);
-        disp.add(GOOGL, "grow, shrink, wrap");
+        disp.add(GOOGL, "grow, shrink");
+
+        textArea.setPreferredSize(new Dimension(400, 200));
+        textArea.setFont(new Font("Calibri", Font.BOLD, 24));
+        disp.add(textArea, "grow, shrink, span 2 8, wrap");
 
 
-        stockMSFT.setSize(100, 50);
+        stockMSFT.setPreferredSize(label);
         stockMSFT.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockMSFT, "grow, shrink");
 
-        MSFT.setSize(100, 50);
+        MSFT.setPreferredSize(label);
         MSFT.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(MSFT, "grow, shrink, wrap");
 
-        stockTSLA.setSize(100, 50);
+        stockTSLA.setPreferredSize(label);
         stockTSLA.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockTSLA, "grow, shrink");
 
-        TSLA.setSize(100, 50);
+        TSLA.setPreferredSize(label);
         TSLA.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(TSLA, "grow, shrink, wrap");
 
-        stockTXN.setSize(100, 50);
+        stockTXN.setPreferredSize(label);
         stockTXN.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockTXN, "grow, shrink");
 
-        TXN.setSize(100, 50);
+        TXN.setPreferredSize(label);
         TXN.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(TXN, "grow, shrink, wrap");
 
-        stockVRTU.setSize(100, 50);
+        stockVRTU.setPreferredSize(label);
         stockVRTU.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockVRTU, "grow, shrink");
 
-        VRTU.setSize(100, 50);
+        VRTU.setPreferredSize(label);
         VRTU.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(VRTU, "grow, shrink, wrap");
 
 
-        stockXLNX.setSize(100, 50);
+        stockXLNX.setPreferredSize(label);
         stockXLNX.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockXLNX, "grow, shrink");
 
-        XLNX.setSize(100, 50);
+        XLNX.setPreferredSize(label);
         XLNX.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(XLNX, "grow, shrink, wrap");
 
-        stockYHOO.setSize(100, 50);
+        stockYHOO.setPreferredSize(label);
         stockYHOO.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(stockYHOO, "grow, shrink");
 
-        YHOO.setSize(100, 50);
+        YHOO.setPreferredSize(label);
         YHOO.setHorizontalAlignment(SwingConstants.CENTER);
         disp.add(YHOO, "grow, shrink, wrap");
 
@@ -159,5 +196,24 @@ public class Display extends JFrame implements ActionListener{
         XLNX.setText(String.valueOf(mainServer.getPrice("XLNX")));
         TSLA.setText(String.valueOf(mainServer.getPrice("TSLA")));
         TXN.setText(String.valueOf(mainServer.getPrice("TXN")));
+
+        textArea.append(history());
+
+        place.replace("FB", mainServer.getsizehistory("FB"));
+        place.replace("MSFT",mainServer.getsizehistory("MSFT"));
+        place.replace("VRTU",mainServer.getsizehistory("VRTU"));
+        place.replace("GOOGL",mainServer.getsizehistory("GOOGL"));
+        place.replace("YHOO",mainServer.getsizehistory("YHOO"));
+        place.replace("XLNX",mainServer.getsizehistory("XLNX"));
+        place.replace("TSLA",mainServer.getsizehistory("TSLA"));
+        place.replace("TXN",mainServer.getsizehistory("TXN"));
+    }
+
+    public String history(){
+        String st = String.valueOf(histo.getSelectedItem());
+        if(place.containsKey(st) && ((place.get(st))!=0)){
+            return mainServer.getHistory(st, (place.get(st)));
+        }
+        return "";
     }
 }

@@ -26,7 +26,7 @@ public class MainServer {
 
 
 
-    private static Map<String,LinkedList> history = new HashMap<String,LinkedList>();
+    public static Map<String,LinkedList> history = new HashMap<String,LinkedList>();
 
 
     public MainServer(int socket, DBStocks stocks) {
@@ -40,6 +40,7 @@ public class MainServer {
         history.put("TSLA", new LinkedList<Tuple<String, Double>>());
         history.put("TXN", new LinkedList<Tuple<String, Double>>());
 
+        addHistory("FB", "Rama", "200");
         try {
             this.serverSocket = new ServerSocket(socket);
         } catch (IOException e) {
@@ -77,5 +78,24 @@ public class MainServer {
 
     public double getPrice(String stockSymbol){
         return stocks.findPrice(stockSymbol);
+    }
+
+    public String getHistory(String selectedItem, int i) {
+    if(history.containsKey(selectedItem)) {
+        LinkedList<Tuple<String, Double>> arr = history.get(selectedItem);
+        String finals = "", tem;
+        for (; i < arr.size(); i++) {
+            Tuple<String, Double> temp = arr.get(i);
+            tem = temp.x + " bids " + temp.y + "\n";
+            finals = finals.concat(tem);
+        }
+        return finals;
+    }
+        return "";
+    }
+
+    public int getsizehistory(String stock) {
+        LinkedList<Tuple<String, Double>> tmp = history.get(stock);
+        return tmp.size();
     }
 }
